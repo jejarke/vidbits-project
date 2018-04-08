@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VidBits</title>
+    <link rel="icon" type="image/ico" href="/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,500" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css'>
+  </head>
+  <body>
+    <div class="title-container">
+      <div class="title-logo">
+        <img src="/img/logo.svg" alt="">
+      </div>
+    </div>
+    <div class="videos-container">
+      <h2 class="form-title">Insert a new video</h2>
+        <form class="input-form" action="/videos" method="post" >
+        <label class="form-label" for="title">Title</label>
+        <input id="title-input" name="title" maxlength="50" value="{{newItem.title}}"/>
+        {{#with newItem.errors.title as |error|}}
+        <span class="error">{{error.message}}</span>
+        {{/with}}
+        
+        <label class="form-label" for="description">Description</label>
+        <textarea id="description-input" name="description">{{newItem.description}}</textarea>
+        {{#with newItem.errors.description as |error|}}
+        <span class="error">{{error.message}}</span>
+        {{/with}}
+
+        <label class="form-label" for="" >Image Url</label>
+        <input id="-input" name="url" oninput="handleChange" value="{{newItem.url}}"/>
+        {{#with newItem.errors.url as |error|}}
+        <span class="error">{{error.message}}</span>
+        {{/with}}
+
+        <div class="form-navigation">
+            <a href="/">
+            <img class="back-arrow" src="/img/back.svg" alt="back">
+            </a>
+            <button class="button submit-button" id="submit-button" type="submit">
+            <p>Create new</p>
+            </button>
+        </div>
+        </form>
+    </div>
+  </body>
+</html>
