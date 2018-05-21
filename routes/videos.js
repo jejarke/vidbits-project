@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const Video = require('../models/video');
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   res.redirect('/videos');
 })
 
@@ -46,32 +46,21 @@ router.get('/videos/:id/edit', async (req, res, next) => {
 
 router.post('/videos/:id/updates', async (req, res, next) => {
   const { title, description, url } = req.body;
-  const video = new Video({ title, description, url });
+  const Video = new Video({ title, description, url });
 
-  const errors = video.validateSync();
+  const errors = Video.validateSync();
   if(errors) {
     res.status(400).render('videos/update', {video});
   } else {
-    Video.findOneAndUpdate(
-      { _id: req.params.id }, 
-      { title, description, url },
-      {upsert: true}, (err, doc) => {
-      if(err) {
-        res.status(400).render('videos/update', {video: doc});
-      } else {
-        res.redirect(`/videos/${req.params.id}`);
-      }
-    });
+    const video = await Video.findOneAndUpdate({ _id: req.params.id }, { title, description, url }, { upsert: true });
+    if (!video) res.status(400).render('videos/update', {video: doc});
+    res.redirect(`/videos/${req.params.id}`);
   }
 });
 
 router.post('/videos/:id/deletions', async (req, res, next) => {
-  try {
-    await Video.findByIdAndRemove(req.params.id);
-  } catch(e){}
-  finally{
-    res.redirect('/videos');
-  }
+  await Video.findByIdAndRemove(req.params.id);
+  res.redirect('/videos');
 });
 
 module.exports = router;
